@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Arduino build files
+*.ino.bin
+*.elf
+*.map
+
+# Temporary
+*.log
+
+# Backup
+*.bak
+
+# Python
+__pycache__/
+*.pyc
