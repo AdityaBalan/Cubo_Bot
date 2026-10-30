@@ -1,125 +1,74 @@
-# Cubo
+# Cubo Bot
 
-> An interactive ESP32-C3 powered desktop companion featuring expressive OLED animations, touch and motion interaction, rechargeable battery operation, and a custom 3D-printed enclosure.
+Cubo is a compact OLED desk companion with animated facial expressions and an event-driven behaviour model.
 
-> **Project Status:** 🚧 Under Active Development
+> **Current validated build:** Wemos D1 Mini (ESP8266) + 1.3-inch 128×64 SH1106 I²C OLED. The firmware foundation has been uploaded and tested on this hardware by the project developer.
 
----
+## Current status
 
-## Overview
+| Subsystem | Status | Notes |
+|---|---|---|
+| Wemos D1 Mini (ESP8266) | Tested | Current firmware target |
+| 1.3-inch SH1106 OLED | Tested | 128×64, I²C, U8g2 |
+| Expression bitmaps | Implemented | Nine monochrome frames stored in flash |
+| Animation controller | Implemented | Non-blocking, `millis()`-based sequencing |
+| Behaviour state machine | Implemented | Awake, drowsy, sleeping, waking |
+| Serial input adapter | Implemented | Temporary input simulation |
+| TTP223 touch sensor | Not integrated | Planned input source |
+| ADXL345 accelerometer | Not integrated | Planned gesture input |
+| LiPo + TP4056 + regulator | Not integrated | Power architecture still to be engineered |
+| Enclosure | Not designed | Mechanical design follows hardware integration |
 
-Cubo is a compact, portable desktop companion designed to bring personality to any workspace through expressive animations and interactive behaviors.
+## Behaviour foundation
 
-Inspired by the charm of minimalist digital companions, Cubo combines embedded electronics, custom firmware, and industrial design into a single handheld device. The project emphasizes reliability, smooth animations, efficient power management, and a polished user experience.
+- Happy expression on startup.
+- Automatic blink at a randomized 3–6 second interval.
+- Drowsy transition after approximately 12 seconds without interaction.
+- Sleep animation loops through two frames.
+- Touch event wakes the device.
+- Serial commands simulate inputs during development: `t` (touch), `l` (left tilt), `r` (right tilt).
 
-The long-term goal is to create a product-quality DIY companion that feels engaging, responsive, and thoughtfully engineered rather than simply functioning as another electronics prototype.
+## Repository layout
 
----
-
-## Planned Features
-
-- Expressive OLED face animations
-- Smooth blinking and eye movement
-- Touch-based interaction
-- Motion-aware reactions using a 3-axis accelerometer
-- Rechargeable LiPo battery with onboard charging
-- Portable, fully enclosed design
-- Low-power operation
-- Modular firmware architecture
-- Custom-designed 3D printed enclosure
-
----
-
-## Hardware
-
-| Component | Status |
-|-----------|--------|
-| ESP32-C3 Super Mini | ✅ |
-| 1.3" SSD1306 OLED Display | ✅ |
-| TTP223 Capacitive Touch Sensor | ✅ |
-| ADXL345 Accelerometer | ✅ |
-| TP4056 USB-C Charging Module | ✅ |
-| 800 mAh LiPo Battery | ✅ |
-| Custom 3D Printed Enclosure | ⏳ In Progress |
-
----
-
-## Software Stack
-
-- Arduino IDE/ESP-IDF
-- ESP32 Arduino Framework
-- U8g2 Graphics Library
-- Git & GitHub
-
----
-
-## Repository Structure
-
-```
-Cubo/
-├── README.md
-├── LICENSE
-├── firmware/
-├── hardware/
-├── docs/
-├── tests/
-└── media/
+```text
+firmware/
+  CuboBot_Firmware/
+    CuboBot_Firmware.ino
+    Config.h
+    Display/
+    Expressions/
+    Animation/
+    Behaviour/
+    Input/
+docs/
+  architecture.md
+  hardware.md
+  development-log.md
 ```
 
-This repository will evolve alongside the project, with documentation, CAD files, firmware, wiring diagrams, and testing results added as each development milestone is completed.
+## Getting started
 
----
+1. Install Arduino IDE and the **U8g2** library by oliver.
+2. Open `firmware/CuboBot_Firmware/CuboBot_Firmware.ino`.
+3. Select **LOLIN(WEMOS) D1 R2 & mini** (or the matching Wemos D1 Mini ESP8266 board package entry).
+4. Upload to the Wemos D1 Mini.
+5. Open Serial Monitor at **115200 baud** and send `t`, `l`, or `r`.
 
-## Development Roadmap
+See [firmware setup](firmware/CuboBot_Firmware/README.md), [architecture](docs/architecture.md), [hardware notes](docs/hardware.md), and the [development log](docs/development-log.md).
 
-### Phase 1 — Hardware Bring-up
-- [x] Repository initialization
-- [x] ESP32-C3 verification
-- [ ] OLED initialization
-- [ ] I²C validation
+## Development workflow
 
-### Phase 2 — Display System
-- [ ] Display driver
-- [ ] Face renderer
-- [ ] Blink animation
-- [ ] Expression engine
+Work is staged on `develop`. Feature branches are reviewed through pull requests; `main` is reserved for stable milestones. Commits use conventional commit-style messages.
 
-### Phase 3 — Interaction
-- [ ] Touch sensor integration
-- [ ] Motion sensing
-- [ ] Emotion state machine
+## Roadmap
 
-### Phase 4 — Power System
-- [ ] Battery integration
-- [ ] Charging validation
-- [ ] Battery monitoring
-- [ ] Low-power optimization
+1. Integrate and validate TTP223 touch input.
+2. Integrate ADXL345 and tune gesture recognition.
+3. Finalize regulated battery/power design and verify safe charging.
+4. Design and validate the enclosure against measured hardware.
+5. Implement low-power behaviour and perform runtime/reliability tests.
 
-### Phase 5 — Mechanical Design
-- [ ] CAD enclosure
-- [ ] 3D printing
-- [ ] Assembly
-- [ ] Final testing
+## Hardware safety note
 
----
+The TP4056 is a Li-ion charger/protection module, not a 3.3 V regulator. Do not connect the LiPo directly to the Wemos 3V3 rail. Final battery integration requires a suitable regulated supply and a verified power-path design.
 
-## Project Goals
-
-This project is being developed with an emphasis on:
-
-- Reliability
-- Maintainability
-- Clean firmware architecture
-- Professional documentation
-- Reproducible hardware design
-- Incremental development and testing
-
-Every milestone is validated before introducing additional hardware or software complexity.
-
----
-
-## License
-
-This project is licensed under the MIT License.
-
----
